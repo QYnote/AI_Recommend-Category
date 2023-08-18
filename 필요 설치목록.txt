@@ -1,0 +1,8 @@
+pip 설치목록
+pandas 2.0.0 이상
+scikit-learn 1.2.x
+joblib
+konlpy 0.6.0 이상
+
+프로그램 설치목록
+JDK

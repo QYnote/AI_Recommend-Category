@@ -1,0 +1,21 @@
+1. 사용자환경
+- Flutter 이용해보기
+: DeskTop - Mobile 확장성 대비용
+, 일단은 DeskTop으로 개발
+
+- 저장방식은 ServerDB방식이 아닌 Local .csv or .xls방식
+: 추후 ServerDB방식 개선
+
+
+2. 개발환경
+- VisualStudio Code로 해보기
+: Android Studio로 이용하라는 환경이 많지만 Code 이용이유
+/ Android로 이용할 경우 Mac환경에서는 가동이 안될수도 있지 않을까? 라는 개인생각 및 확장성 대비이유
+
+- Dart언어 공부
+: Flutter 주 언어가 Dart로 이루어져 있음
+/ java와 비슷하다고 하니 크게 어렵지는 않지 않을까 생각중
+
+3. 기능요구
+- 웹 크롤링
+: pup라는 Package 발견
