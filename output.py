@@ -4,6 +4,7 @@ import time
 totalTime = time.time()
 startTime = time.time()
 import pandas as pd #DataFrame 용
+import numpy as np
 import joblib   #모델 불러오기용
 import os
 import json
@@ -65,9 +66,14 @@ def outputDataList():
 
     result['origin'] = df
 
+    #특정확률 이하일 떄 시 빈값
+    result['Rate'] = np.max(model.predict_proba(dfInput), axis=1)
+    result.loc[result['Rate'] < 0.6, 0] = ''
+
     #Column명 바꾸기
     result.rename(columns={result.columns[0]:'카테고리 번호'}, inplace=True)
     result.rename(columns={result.columns[1]:'제목'}, inplace=True)
+    result.rename(columns={result.columns[2]:'확률'}, inplace=True)
 
     #결과 저장
     result.to_excel(json_obj["ResultFilePath"] + "\\" + json_obj["ResultFileName"] + '.xlsx', index=False)
@@ -110,4 +116,4 @@ def outputDataOne(inputStr:str):
 print(outputDataList())
 print('최종 완료시간 :', time.time() - totalTime)
 
-print(outputDataOne('엑센트 2019 강화유리 내비게이션 보호 필름'))
+# print(outputDataOne('엑센트 2019 강화유리 내비게이션 보호 필름'))

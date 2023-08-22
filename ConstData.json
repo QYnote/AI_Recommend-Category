@@ -1,7 +1,7 @@
 {
     "Learning":{
-        "learningFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\SmartStore\\UserFile",
-        "learningFileName": "OC_category_review_2023-08-10_400.xlsx",
+        "learningFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
+        "learningFileName": "OC_category_review_2023-08-18_.xlsx",
         "__Comment" :"learningUsecolumn 사용법 : 첫번째칸에 결과값이 들어가있는 Column명, 두번째 칸에 학습시킬 제목이 들어가있는 Column 명 입력",
         "learningUseColumn":["마켓 카테고리번호", "상품명*"],
         "OutputPriority":[
@@ -16,11 +16,11 @@
     },
     
     "Run":{
-        "runFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\SmartStore\\UserFile",
-        "runFileName": "OC_to_1stDB_2023-08-09_400_.xlsx",
+        "runFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
+        "runFileName": "10000allchem_ESELLERS_.xlsx",
         "runUseColumn": "상품명*",
 
-        "ResultFilePath" : "D:\\00.Storage\\Study\\Programing\\Project\\SmartStore\\UserFile",
+        "ResultFilePath" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
         "ResultFileName" : "ResultExcel"
     }
 }
