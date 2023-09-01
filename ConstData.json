@@ -1,7 +1,5 @@
 {
     "Learning":{
-        "learningFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
-        "learningFileName": "OC_category_review_2023-08-18_.xlsx",
         "__Comment" :"learningUsecolumn 사용법 : 첫번째칸에 결과값이 들어가있는 Column명, 두번째 칸에 학습시킬 제목이 들어가있는 Column 명 입력",
         "learningUseColumn":["마켓 카테고리번호", "상품명*"],
         "OutputPriority":[
@@ -9,18 +7,14 @@
             "쿠팡"
         ],
         "MinLearningDataCnt" : 100000,
-        "ExceptionWord":[
+        "ExceptionWords":[
             "제외할 단어1",
             "제외할 단어2"
         ]
     },
     
     "Run":{
-        "runFileDirectory" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
-        "runFileName": "10000allchem_ESELLERS_.xlsx",
-        "runUseColumn": "상품명*",
-
-        "ResultFilePath" : "D:\\00.Storage\\Study\\Programing\\Project\\AI_Recommend-Category",
-        "ResultFileName" : "ResultExcel"
+        "MinAccuracy" : 0.6,
+        "runUseColumn": "상품명*"
     }
 }
