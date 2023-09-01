@@ -45,7 +45,7 @@ print('파일 불러오기 종료')
 #결과물 출력
 print("결과물 출력 시작")
 
-OutputData = Model.OutputKNN(df, json_obj["MinAccuracy"])
+OutputData = Model.OutputKNN(df, json_obj["OutputPlatform"], json_obj["MinAccuracy"])
 
 print("결과물 출력 종료")
 

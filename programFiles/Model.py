@@ -154,15 +154,12 @@ def LoadModel(ModelType:ModelTypeList, PlatForm:str):
 
     return joblib.load(path + "\\" + fileName)
 
-def OutputKNN(InputData, minRate:float):
+def OutputKNN(InputData, PlatformList:list, minRate:float):
     ResultData = pd.DataFrame(InputData)
-
-    path = os.path.dirname(os.path.realpath(__file__)) + "\\models\\KNN"
-    files = os.listdir(path)
 
     InputData = PreProcess.Vectorise_Apply(PreProcess, InputData)
 
-    for Platform in files:
+    for Platform in PlatformList:
         #플랫폼별 모델 결과값 추출
         PlfModel = LoadModel(ModelType='KNN', PlatForm=Platform)
         ResultData[Platform] = PlfModel.predict(InputData)

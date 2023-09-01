@@ -72,7 +72,7 @@ print('전처리 종료')
 print('학습 시작')
 
 #플랫폼별 학습
-for Platform in LabelData.columns:
+for Platform in json_obj["LearningPlatform"]:
     startTime = time.time()
     model, result = Model.Learning_KNN(TrainData, LabelData.loc[:, Platform])
 

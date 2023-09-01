@@ -2,11 +2,12 @@
     "Learning":{
         "__Comment" :"learningUsecolumn 사용법 : 첫번째칸에 결과값이 들어가있는 Column명, 두번째 칸에 학습시킬 제목이 들어가있는 Column 명 입력",
         "learningUseColumn":["마켓 카테고리번호", "상품명*"],
-        "OutputPriority":[
+        "__CommentStor" :["11번가", "ESM2.0", "G마켓", "롯데ON", "스마트스토어", "옥션", "위메프2.0", "인터파크", "쿠팡", "톡스토어"],
+        "LearningPlatform":[
             "스마트스토어",
             "쿠팡"
         ],
-        "MinLearningDataCnt" : 100000,
+        "MinLearningDataCnt" : 100,
         "ExceptionWords":[
             "제외할 단어1",
             "제외할 단어2"
@@ -14,6 +15,10 @@
     },
     
     "Run":{
+        "__CommentStor" :["11번가", "ESM2.0", "G마켓", "롯데ON", "스마트스토어", "옥션", "위메프2.0", "인터파크", "쿠팡", "톡스토어"],
+        "OutputPlatform":[
+            "스마트스토어"
+        ],
         "MinAccuracy" : 0.6,
         "runUseColumn": "상품명*"
     }
