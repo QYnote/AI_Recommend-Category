@@ -5,6 +5,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 import time
+from sklearn.model_selection import train_test_split    #학습데이터 구분용
 
 from programFiles import Model
 print('Package 호출 완료')
@@ -55,12 +56,24 @@ for row in df.loc[:, useColumn[1]]:
 
 TrainData = pre.Vectorise_Learn(dataList)   #str -> float화
 LabelData = pre.Platform_Modify(df.loc[:, useColumn[0]])    #플랫폼별 분리
+print(pre.Vectorizer.get_feature_names_out())
+
+#학습, 테스트데이터 분리
+X_Train, X_Test, Y_Train, Y_Test = train_test_split(
+    TrainData, LabelData,
+    test_size=0.3,  #학습7 : 테스트3
+    random_state=10,
+)
 
 #결측치 제거
-LearningData = pd.concat([TrainData, LabelData], axis=1).dropna()
+LearningData = pd.concat([X_Train, Y_Train], axis=1).dropna()
 
+#학습데이터 증가
+doubleCnt = 0 #데이터 복사 횟수
 while(LearningData.shape[0] < json_obj["MinLearningDataCnt"]):
     LearningData = pd.concat([LearningData, LearningData], axis=0)
+
+    doubleCnt += 1
 
 TrainData = LearningData.loc[:, 0:len(TrainData.columns) - 1]
 LabelData = LearningData.loc[:, LabelData.columns[0]:LabelData.columns[len(LabelData.columns) - 1]]
@@ -72,15 +85,21 @@ print('전처리 종료')
 print('학습 시작')
 
 #플랫폼별 학습
+learning = Model.Learning(json_obj["LearningModel"])
+
 for Platform in json_obj["LearningPlatform"]:
     startTime = time.time()
-    model, result = Model.Learning_KNN(TrainData, LabelData.loc[:, Platform])
+
+    if(json_obj["LearningModel"] == 'RandomForest'):
+        model, result = learning.Learning_RandomForest(TrainData, LabelData.loc[:, Platform], X_Test, Y_Test.loc[:, Platform])
+    elif(json_obj["LearningModel"] == 'KNN'):
+        model, result = learning.Learning_KNN(TrainData, LabelData.loc[:, Platform], X_Test, Y_Test.loc[:, Platform], 5 * (2 ** doubleCnt))
 
     Model.SaveModel(
-        ModelType='KNN',
+        ModelType=json_obj["LearningModel"],
+        PlatForm=str(Platform),
         Model=model,
-        result=result,
-        PlatForm=str(Platform)
+        result=result
     )
 
     print(Platform, ": 학습 종료 / ", time.time() - startTime, "sec 소요")

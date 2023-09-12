@@ -1,8 +1,11 @@
 pip 설치목록
+python 3.1 
 pandas 2.0.0 이상
-scikit-learn 1.2.x
+scikit-learn 1.2.0
 joblib
+jpype1 1.1
 konlpy 0.6.0 이상
+open pyxl
 
 프로그램 설치목록
 JDK

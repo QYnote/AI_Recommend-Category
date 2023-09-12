@@ -6,6 +6,8 @@ import joblib   #모델 저장용
 import datetime
 import os
 
+from sklearn.model_selection import train_test_split    #학습데이터 구분용
+
 ModelTypeList = ['KNN', 'RandomForest']
 
 class PreProcess:
@@ -32,8 +34,12 @@ class PreProcess:
             wordTag = wordInfo[1]
 
             if(wordTag in UseTag):    #입력할 Tag에 속하면 입력
+                #제외단어 스킵
                 if((ExceptionWords is not None) and (word in ExceptionWords)):
                     continue
+                #숫자면 스킵
+                if(word.isdecimal()): continue
+
                 keywords.append(word)
 
         #3. Vector화하기위해 1row 1문장처리
@@ -97,26 +103,43 @@ class PreProcess:
             LabelList.append(PlatformDict)
         return pd.DataFrame(LabelList)
 
-
-#KNN Model 학습
-def Learning_KNN(TrainData:pd.DataFrame, LabelData:pd.DataFrame):
-    from sklearn.model_selection import train_test_split    #학습데이터 구분용
-    from sklearn.neighbors import KNeighborsClassifier
+class Learning:
     from sklearn import metrics #학습결과 수치조회용
 
-    #1. 학습, 테스트데이터 분리
-    X_Train, X_Test, Y_Train, Y_Test = train_test_split(
-        TrainData, LabelData,
-        test_size=0.3,  #학습7 : 테스트3
-        random_state=10,
-    )
-    #2. 모델 생성 및 학습
-    model = KNeighborsClassifier(n_neighbors = 5)   #모델 설정
-    model.fit(X_Train, Y_Train) #모델 학습
+    def __init__(self, ModelName:str):
+        if(ModelName == 'KNN'):
+            from sklearn.neighbors import KNeighborsClassifier  #KNN : Output Multi Column 가능
 
-    y_pred = model.predict(X_Test)  #모델에 테스트Input 입력
-    result = metrics.accuracy_score(Y_Test, y_pred=y_pred)  #정확도 측정
-    return model, result
+            self.model = KNeighborsClassifier()   #모델 설정
+
+        elif(ModelName == 'RandomForest'):
+            from sklearn.ensemble import RandomForestClassifier #RandomForest : Output Multi Column 불가능
+
+            self.model = RandomForestClassifier(
+                n_estimators=20,
+                min_samples_leaf = 4,
+                max_depth=20
+            )
+
+    #KNN Model 학습
+    def Learning_KNN(self, TrainData:pd.DataFrame, LabelData:pd.DataFrame, TestInput:pd.DataFrame, TestTrue=pd.DataFrame, n_neighbors = 5):
+        #모델 생성 및 학습
+        self.model.n_neighbors = n_neighbors   #모델 설정
+        self.model.fit(TrainData, LabelData) #모델 학습
+
+        y_pred = self.model.predict(TestInput)  #모델에 테스트Input 입력
+        result = self.metrics.accuracy_score(y_true=TestTrue, y_pred=y_pred)  #정확도 측정
+        return self.model, result
+
+    #RandomForest Model 학습
+    def Learning_RandomForest(self, TrainData:pd.DataFrame, LabelData:pd.DataFrame, TestInput:pd.DataFrame, TestTrue=pd.DataFrame):
+        #모델 생성 및 학습
+        #모델 설정
+        self.model.fit(TrainData, LabelData) #모델 학습
+
+        y_pred = self.model.predict(TestInput)  #모델에 테스트Input 입력
+        result = self.metrics.accuracy_score(y_true=TestTrue, y_pred=y_pred)  #정확도 측정
+        return self.model, result
 
 #모델 저장
 def SaveModel(ModelType:ModelTypeList, Model, result, PlatForm:str):
@@ -154,21 +177,24 @@ def LoadModel(ModelType:ModelTypeList, PlatForm:str):
 
     return joblib.load(path + "\\" + fileName)
 
-def OutputKNN(InputData, PlatformList:list, minRate:float):
+#OutputData 내보내기
+def OutputDataFrame(ModelName:str, InputData, PlatformList:list, minRate:float):
     ResultData = pd.DataFrame(InputData)
 
     InputData = PreProcess.Vectorise_Apply(PreProcess, InputData)
 
     for Platform in PlatformList:
         #플랫폼별 모델 결과값 추출
-        PlfModel = LoadModel(ModelType='KNN', PlatForm=Platform)
+        PlfModel = LoadModel(ModelType=ModelName, PlatForm=Platform)
         ResultData[Platform] = PlfModel.predict(InputData)
 
         #해당 데이터 정확도가 일정 수치 이하면 빈값
-        ResultData['Rate'] = np.max(PlfModel.predict_proba(InputData), axis=1)
-        ResultData.loc[ResultData['Rate'] < minRate, Platform] = np.nan
+        RstRateList = PlfModel.predict_proba(InputData)
+        ResultData['Rate' + Platform] = np.max(RstRateList, axis=1)
+        ResultData.loc[ResultData['Rate' + Platform] < minRate, Platform] = np.nan
 
+    # print(ResultData)
     #정확도 계산 Column 삭제
-    ResultData.drop(['Rate'], axis='columns', inplace=True)
+    # ResultData.drop(['Rate'], axis='columns', inplace=True)
 
     return ResultData
